@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { AutoFormState } from '../autoform.svelte.ts';
 	import type { HTMLInputAttributes } from 'svelte/elements';
+	import type { FieldMeta } from '$lib/types.d.ts';
 	import Header from './header.svelte';
 	import Footer from './footer.svelte';
 	type Props = HTMLInputAttributes & {
-		field: any;
+		field: FieldMeta;
 		auto_form: AutoFormState<any>;
 	};
 	let { field, auto_form, ...props }: Props = $props();

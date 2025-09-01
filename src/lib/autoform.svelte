@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { type RemoteForm } from '@sveltejs/kit';
 	import { AutoFormState } from './autoform.svelte.ts';
-	import type { FormMeta } from './types.js';
-	import Field from './fields/field.svelte';
 	import z from 'zod';
-	import type { Snippet } from 'svelte';
 
 	// Utility
 	import { getMeta } from './zod_adapter.ts';

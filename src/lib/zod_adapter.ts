@@ -1,21 +1,5 @@
 import { z } from 'zod/v4';
-import type { Component } from 'svelte';
-
-export interface FormMeta {
-	form_id?: string;
-	title?: string;
-	description?: string;
-}
-
-export interface FieldMeta {
-	field_id: string;
-	label?: string;
-	description?: string;
-	readonly?: boolean;
-	hidden?: boolean;
-	autocomplete?: string;
-	component: Component<any>; // Generic Svelte component
-}
+import type { FormMeta, FieldMeta } from './types.d.ts';
 
 export const form_registry = z.registry<FormMeta>();
 export const field_registry = z.registry<FieldMeta>();
