@@ -28,6 +28,8 @@
 	callback={async (result) => {
 		const response = await handleForm(result);
 		return response;
-	}}
-/>
+	}}>
+	{#snippet button_content()}
+		<div class="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">Submit</div>
+	{/snippet}</AutoForm>
 <AutoForm form_schema={form_schema_register} callback={handleForm} />

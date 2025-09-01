@@ -18,11 +18,11 @@
 	{...props}
 	bind:value={auto_form.data[field.field_id]}
 	name={field.field_id}
+	type={field.hidden ? 'password' : 'text'}
 	onchange={(e) => {
 		auto_form.onBlur(field.field_id);
 	}}
 	oninput={(e) => {
 		auto_form.onInput(field.field_id);
-	}}
-/>
+	}} />
 <Footer errors={auto_form.validation[field.field_id].errors} />
