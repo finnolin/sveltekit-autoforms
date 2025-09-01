@@ -20,8 +20,7 @@
 		"dist",
 		"!dist/**/*.test.*",
 		"!dist/**/*.spec.*",
-		"!dist/schemas/**",
-		"!dist/fields/**"
+		"!dist/schemas/**"
 	],
 	"sideEffects": [
 		"**/*.css"
