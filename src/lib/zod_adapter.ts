@@ -1,5 +1,5 @@
 import { z } from 'zod/v4';
-import type { FormMeta, FieldMeta } from './types.d.ts';
+import type { FormMeta, FieldMeta } from './types.d.js';
 
 export const form_registry = z.registry<FormMeta>();
 export const field_registry = z.registry<FieldMeta>();

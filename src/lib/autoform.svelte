@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { type RemoteForm } from '@sveltejs/kit';
-	import { AutoFormState } from './autoform.svelte.ts';
+	import { AutoFormState } from './autoform.svelte.js';
 	import z from 'zod';
 
 	// Utility
-	import { getMeta } from './zod_adapter.ts';
+	import { getMeta } from './zod_adapter.js';
 
 	type AutoFormProps<T extends z.ZodRawShape = z.ZodRawShape> = {
 		remoteFunction: RemoteForm<any>;
