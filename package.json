@@ -16,8 +16,12 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint ."
 	},
+	"bin": {
+		"sveltekit-autoforms": "./bin/cli.js"
+	},
 	"files": [
 		"dist",
+		"bin/",
 		"!dist/**/*.test.*",
 		"!dist/**/*.spec.*",
 		"!dist/schemas/**"
@@ -80,5 +84,8 @@
 			"@semantic-release/github",
 			"@semantic-release/npm"
 		]
+	},
+	"dependencies": {
+		"commander": "^14.0.0"
 	}
 }
