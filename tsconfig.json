@@ -12,5 +12,16 @@
 		"module": "NodeNext",
 		"moduleResolution": "NodeNext",
 		"allowImportingTsExtensions": true
-	}
+	},
+	"exclude": [
+		"src/lib/fields/**",
+		"src/lib/schemas/**",
+		"node_modules/**/*",
+		"dist/**/*",
+		".svelte-kit/**/*",
+		"build/**/*",
+		"coverage/**/*",
+		"**/*.test.ts",
+		"**/*.spec.ts"
+	]
 }

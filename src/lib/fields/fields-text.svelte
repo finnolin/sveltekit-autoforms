@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { AutoFormState } from '../autoform.svelte.ts';
+	import { AutoFormState } from '../autoformstate.svelte.ts';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import type { FieldMeta } from '$lib/types.d.ts';
 	import Header from './header.svelte';

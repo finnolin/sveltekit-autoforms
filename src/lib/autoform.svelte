@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { type RemoteForm } from '@sveltejs/kit';
-	import { AutoFormState } from './autoform.svelte.js';
+	import { AutoFormState } from './autoformstate.svelte.ts';
 	import z from 'zod';
 
 	// Utility

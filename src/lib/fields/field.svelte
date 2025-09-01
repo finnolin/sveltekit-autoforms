@@ -4,7 +4,7 @@
 
 <script lang="ts" generics="T extends Record<string, unknown>">
 	import type { HTMLInputAttributes } from 'svelte/elements';
-	import { AutoFormState } from '../autoform.svelte.ts';
+	import { AutoFormState } from '../autoformstate.svelte';
 
 	type Props = HTMLInputAttributes & {
 		field: any;
