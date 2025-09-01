@@ -5,7 +5,7 @@ import type { FormMeta, FieldMeta } from './types.d.js';
 export const form_registry = registry<FormMeta>();
 export const field_registry = registry<FieldMeta>();
 
-export interface SchemaMetadata {
+interface SchemaMetadata {
 	form: FormMeta | undefined;
 	fields: Record<string, FieldMeta | undefined>;
 }
