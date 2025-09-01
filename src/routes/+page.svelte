@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { submitAutoForm } from './autoform.remote.ts';
-	import { form_schema_register } from '../schemas/form-schema-register.ts';
+	import { submitAutoForm } from './autoform.remote.js';
+	import { form_schema_register } from '$lib/schemas/form-schema-register.js';
 	import AutoForm from '$lib/autoform.svelte';
 </script>
 

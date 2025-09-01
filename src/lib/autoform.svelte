@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { type RemoteForm } from '@sveltejs/kit';
-	import { AutoFormState } from './autoformstate.svelte.ts';
+	import { AutoFormState } from './autoformstate.svelte.js';
 	import type { ZodRawShape, ZodObject } from 'zod/v4';
 
 	// Utility

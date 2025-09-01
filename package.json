@@ -19,7 +19,9 @@
 	"files": [
 		"dist",
 		"!dist/**/*.test.*",
-		"!dist/**/*.spec.*"
+		"!dist/**/*.spec.*",
+		"!dist/schemas/**",
+		"!dist/fields/**"
 	],
 	"sideEffects": [
 		"**/*.css"

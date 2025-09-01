@@ -1,5 +1,5 @@
 import { form } from '$app/server';
-import { form_schema_login } from '../schemas/form-schema-login.js';
+import { form_schema_login } from '$lib/schemas/form-schema-login.js';
 
 export const submitForm = form(async (data) => {
 	console.log(data);
@@ -8,7 +8,7 @@ export const submitForm = form(async (data) => {
 		const test = form_schema_login.parse(data);
 		console.log(test);
 		return 'success';
-	} catch (e) {
+	} catch (error) {
 		console.log('an error happened');
 		return 'error';
 	}
