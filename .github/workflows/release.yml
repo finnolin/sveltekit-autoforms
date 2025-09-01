@@ -22,7 +22,9 @@ jobs:
         with:
           node-version: 'lts/*'
       - run: npm ci
-      - run: npm run prepack
+      - run: npx svelte-kit sync
+      - run: npx svelte-package
+      - run: npx publint
       - run: npm audit signatures
       - name: Release
         env:

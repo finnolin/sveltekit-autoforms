@@ -1,4 +1,4 @@
-import { z, type ZodRawShape } from 'zod/v4';
+import { type ZodRawShape, type ZodObject, type input } from 'zod/v4';
 
 // Define the validation state interface
 type FieldValidation = {
@@ -9,7 +9,7 @@ type FieldValidation = {
 
 // Map a Zod shape -> form values (use input type so it matches pre-parse values)
 type FormValuesFromShape<S extends ZodRawShape> = {
-	[K in keyof S]: z.input<S[K]> | undefined;
+	[K in keyof S]: input<S[K]> | undefined;
 };
 
 type FormValidationFromShape<S extends ZodRawShape> = {
@@ -17,11 +17,11 @@ type FormValidationFromShape<S extends ZodRawShape> = {
 };
 
 export class AutoFormState<S extends ZodRawShape = ZodRawShape> {
-	schema: z.ZodObject<S>;
+	schema: ZodObject<S>;
 	data = $state<FormValuesFromShape<S>>({} as FormValuesFromShape<S>);
 	validation = $state<FormValidationFromShape<S>>({} as FormValidationFromShape<S>);
 
-	constructor(schema: z.ZodObject<S>) {
+	constructor(schema: ZodObject<S>) {
 		this.schema = schema;
 		const keys = Object.keys(schema.shape) as Array<keyof S>;
 		for (const key of keys) {
@@ -42,7 +42,7 @@ export class AutoFormState<S extends ZodRawShape = ZodRawShape> {
 		 * if the current value is invalid the field should be validated on input
 		 * if the current value is valid the field should be validated on blur
 		 */
-		const field_schema = this.schema.shape[key] as unknown as z.ZodTypeAny;
+		const field_schema = this.schema.shape[key] as unknown as ZodObject;
 
 		// Validate with Zod
 		const result = await field_schema.safeParseAsync(this.data[key]);

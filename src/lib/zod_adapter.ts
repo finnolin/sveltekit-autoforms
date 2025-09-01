@@ -1,15 +1,16 @@
-import { z } from 'zod/v4';
+import { registry, ZodEnum } from 'zod/v4';
+import type { ZodRawShape, ZodObject, ZodSchema } from 'zod/v4';
 import type { FormMeta, FieldMeta } from './types.d.js';
 
-export const form_registry = z.registry<FormMeta>();
-export const field_registry = z.registry<FieldMeta>();
+export const form_registry = registry<FormMeta>();
+export const field_registry = registry<FieldMeta>();
 
 export interface SchemaMetadata {
 	form: FormMeta | undefined;
 	fields: Record<string, FieldMeta | undefined>;
 }
 
-export function getFormMeta<T extends z.ZodRawShape>(form_schema: z.ZodObject<T>): SchemaMetadata {
+export function getFormMeta<T extends ZodRawShape>(form_schema: ZodObject<T>): SchemaMetadata {
 	const auto_form_meta = form_registry.get(form_schema);
 	const field_meta: Record<string, FieldMeta | undefined> = {};
 
@@ -19,7 +20,7 @@ export function getFormMeta<T extends z.ZodRawShape>(form_schema: z.ZodObject<T>
 		field_meta[field_name] = {
 			...auto_field_meta,
 			//...(field_schema hasOwnProperty 'def' && { type: field_schema.def.type }),
-			...(field_schema instanceof z.ZodEnum && { entries: field_schema.def.entries })
+			...(field_schema instanceof ZodEnum && { entries: field_schema.def.entries })
 		} as FieldMeta;
 	}
 
@@ -31,22 +32,22 @@ export function getFormMeta<T extends z.ZodRawShape>(form_schema: z.ZodObject<T>
 	console.log(schema_meta);
 	return schema_meta;
 }
-export function getMeta<T extends z.ZodRawShape>(form_schema: z.ZodObject<T>) {
+export function getMeta<T extends ZodRawShape>(form_schema: ZodObject<T>) {
 	const auto_form_meta = form_registry.get(form_schema);
 
 	const fields: FieldMeta[] = [];
 
 	for (const [field_name, field_schema] of Object.entries(form_schema.shape)) {
-		const zod_schema = field_schema as z.ZodSchema;
+		const zod_schema = field_schema as ZodSchema;
 		const auto_field_meta = field_registry.get(zod_schema);
 
 		fields.push({
 			...auto_field_meta,
 			type: zod_schema.def.type,
-			...(zod_schema instanceof z.ZodEnum && { entries: zod_schema.def.entries })
+			...(zod_schema instanceof ZodEnum && { entries: zod_schema.def.entries })
 		} as FieldMeta & {
-			type: z.ZodSchema['def']['type'];
-			entries?: z.ZodEnum['def']['entries'];
+			type: ZodSchema['def']['type'];
+			entries?: ZodEnum['def']['entries'];
 		});
 	}
 

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { AutoFormState } from '../autoformstate.svelte.ts';
+	import { AutoFormState } from '$lib/autoformstate.svelte.js';
 	import type { HTMLInputAttributes } from 'svelte/elements';
-	import type { FieldMeta } from '$lib/types.d.ts';
+	import type { FieldMeta } from '$lib/types.d.js';
 	import Header from './header.svelte';
 	import Footer from './footer.svelte';
 	type Props = HTMLInputAttributes & {
