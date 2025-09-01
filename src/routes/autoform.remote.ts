@@ -7,6 +7,7 @@ export const submitForm = form(async (data) => {
 	try {
 		const test = form_schema_login.parse(data);
 		console.log(test);
+
 		return 'success';
 	} catch (error) {
 		console.log('an error happened');
@@ -20,7 +21,8 @@ export const submitAutoForm = form(async (data) => {
 
 	try {
 		const test = form_schema_login.parse(form_data);
-		console.log(test);
+		await new Promise((resolve) => setTimeout(resolve, 1500));
+		console.log('after wait');
 		return 'success';
 	} catch (error) {
 		console.log(error);

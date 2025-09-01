@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { type RemoteForm } from '@sveltejs/kit';
 	import { AutoFormState } from './autoformstate.svelte.js';
-	import type { ZodRawShape, ZodObject } from 'zod/v4';
+	import { type ZodRawShape, type ZodObject, type ZodError } from 'zod/v4';
+	import { type $ZodIssueBase } from 'zod/v4/core';
 
 	// Utility
 	import { getMeta } from './zod_adapter.js';
 
 	type AutoFormProps<T extends ZodRawShape = ZodRawShape> = {
-		remoteFunction: RemoteForm<any>;
+		remoteFunction?: RemoteForm<any>;
 		form_schema: ZodObject<T>;
-		//spa_mode?: string | true | undefined;
 		//form_meta?: FormMeta;
 		//form_id?: string;
 		title?: string;
@@ -18,7 +18,7 @@
 		container_type?: 'dialog' | 'modal' | 'none';
 		callback?: (
 			result: any
-		) => Promise<{ error?: { message: string } } | void> | { error?: { message: string } } | void;
+		) => Promise<void | { issues: $ZodIssueBase[] }> | void | { issues: $ZodIssueBase[] };
 		open?: boolean;
 	};
 
@@ -32,39 +32,53 @@
 		callback,
 		open
 	}: AutoFormProps = $props();
+
 	const form_meta = getMeta(form_schema);
-
-	// Get the keys and create initial state
-	const schem_keys = Object.keys(form_schema.shape);
-	const initial_state = Object.fromEntries(
-		schem_keys.map((key) => [
-			key,
-			{
-				value: undefined,
-				error: undefined,
-				dirty: false,
-				valid: false
-			}
-		])
-	);
-
-	const auto_form = new AutoFormState(form_schema);
+	const autoform = new AutoFormState(form_schema);
 </script>
 
 <form
-	{...remoteFunction.enhance(async ({ form, data, submit }) => {
-		auto_form.validateForm();
-		await submit();
-	})}
+	{...remoteFunction
+		? remoteFunction.enhance(async ({ form, data, submit }) => {
+				autoform.validateForm();
+				await submit();
+				if (!callback) return;
+				const callback_response = await callback({
+					data: autoform.data,
+					success: autoform.success,
+					validation: autoform.validation
+				});
+				if (!callback_response) {
+					return;
+				}
+				autoform.processIssues(callback_response.issues);
+			})
+		: {}}
 >
 	{#each form_meta.fields as field}
 		<div>
-			<field.component {field} {auto_form} />
+			<field.component {field} auto_form={autoform} />
 		</div>
 	{/each}
 
-	<button>Publish!</button>
-	{#if remoteFunction.result}
+	<button
+		onclick={async () => {
+			if (!remoteFunction) {
+				await autoform.validateForm();
+				if (!callback) return;
+				const callback_response = await callback({
+					data: autoform.data,
+					success: autoform.success,
+					validation: autoform.validation
+				});
+				if (!callback_response) {
+					return;
+				}
+				autoform.processIssues(callback_response.issues);
+			}
+		}}>Publish!</button
+	>
+	{#if remoteFunction?.result}
 		{remoteFunction.result}
 	{/if}
 </form>

@@ -1,4 +1,5 @@
 import { type ZodRawShape, type ZodObject, type input } from 'zod/v4';
+import { type $ZodIssueBase } from 'zod/v4/core';
 
 // Define the validation state interface
 type FieldValidation = {
@@ -20,6 +21,7 @@ export class AutoFormState<S extends ZodRawShape = ZodRawShape> {
 	schema: ZodObject<S>;
 	data = $state<FormValuesFromShape<S>>({} as FormValuesFromShape<S>);
 	validation = $state<FormValidationFromShape<S>>({} as FormValidationFromShape<S>);
+	success: boolean = $state(false);
 
 	constructor(schema: ZodObject<S>) {
 		this.schema = schema;
@@ -53,6 +55,7 @@ export class AutoFormState<S extends ZodRawShape = ZodRawShape> {
 			// Set the field to valid
 			this.validation[key].valid = true;
 		} else {
+			this.success = false;
 			// Set the field to invalid and set the error message
 			this.validation[key].valid = false;
 
@@ -65,17 +68,35 @@ export class AutoFormState<S extends ZodRawShape = ZodRawShape> {
 
 	async validateForm() {
 		const result = await this.schema.safeParseAsync(this.data);
-		console.log(result.error?.issues);
 		if (result.success) {
+			this.success = true;
 			return true;
 		} else {
+			this.success = false;
 			result.error.issues.forEach((issue) => {
+				this.validation[issue.path[0] as keyof S].errors = [];
 				this.validation[issue.path[0] as keyof S].errors.push(issue.message);
 				this.validation[issue.path[0] as keyof S].valid = false;
 				this.validation[issue.path[0] as keyof S].dirty = true;
 			});
 			return false;
 		}
+	}
+
+	processIssues(issues: $ZodIssueBase[]) {
+		issues.forEach((issue) => {
+			if (issue.path.length > 0) {
+				issue.path.forEach((p) => {
+					if (!this.validation[p as keyof S]) {
+						return;
+					}
+					this.validation[p as keyof S].errors = [];
+					this.validation[p as keyof S].errors.push(issue.message);
+					this.validation[issue.path[0] as keyof S].valid = false;
+					this.validation[issue.path[0] as keyof S].dirty = true;
+				});
+			}
+		});
 	}
 
 	onInput(key: keyof S) {
