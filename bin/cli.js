@@ -47,14 +47,17 @@ async function updateImports(filePath) {
 
 		// Replace the imports - handle both $lib and relative paths
 		const updatedContent = content
-			.replace(/from '\$lib\/autoformstate\.svelte\.js'/g, "from 'sveltekit-autoforms'")
-			.replace(/from '\$lib\/types\.d\.js'/g, "from 'sveltekit-autoforms'")
+			.replace(/from '\$lib\/autoformstate\.svelte\.js'/g, "from '@finnolin/sveltekit-autoforms'")
+			.replace(/from '\$lib\/types\.d\.js'/g, "from '@finnolin/sveltekit-autoforms'")
 			// Handle relative imports
-			.replace(/from '\.\.\/autoformstate\.svelte\.js'/g, "from 'sveltekit-autoforms'")
-			.replace(/from '\.\.\/types\.d\.js'/g, "from 'sveltekit-autoforms'")
+			.replace(/from '\.\.\/autoformstate\.svelte\.js'/g, "from '@finnolin/sveltekit-autoforms'")
+			.replace(/from '\.\.\/types\.d\.js'/g, "from '@finnolin/sveltekit-autoforms'")
 			// Handle other possible relative paths
-			.replace(/from '\.\.?\/.*?autoformstate\.svelte\.js'/g, "from 'sveltekit-autoforms'")
-			.replace(/from '\.\.?\/.*?types\.d\.js'/g, "from 'sveltekit-autoforms'");
+			.replace(
+				/from '\.\.?\/.*?autoformstate\.svelte\.js'/g,
+				"from '@finnolin/sveltekit-autoforms'"
+			)
+			.replace(/from '\.\.?\/.*?types\.d\.js'/g, "from '@finnolin/sveltekit-autoforms'");
 
 		// Only write if content changed
 		if (content !== updatedContent) {
