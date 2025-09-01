@@ -16,7 +16,7 @@ program
 	.description('CLI for installing sveltekit-autoforms field components')
 	.version('1.0.0');
 
-// Helper function to copy directory recursively
+// Helper function to copy directory recursively (only .svelte and .js files)
 async function copyDirectory(src, dest) {
 	await fs.mkdir(dest, { recursive: true });
 
@@ -29,7 +29,13 @@ async function copyDirectory(src, dest) {
 		if (entry.isDirectory()) {
 			await copyDirectory(srcPath, destPath);
 		} else {
-			await fs.copyFile(srcPath, destPath);
+			// Only copy .svelte and .js files (not .d.ts)
+			if (
+				entry.name.endsWith('.svelte') ||
+				(entry.name.endsWith('.js') && !entry.name.endsWith('.d.ts'))
+			) {
+				await fs.copyFile(srcPath, destPath);
+			}
 		}
 	}
 }
@@ -39,10 +45,16 @@ async function updateImports(filePath) {
 	try {
 		const content = await fs.readFile(filePath, 'utf8');
 
-		// Replace the imports
+		// Replace the imports - handle both $lib and relative paths
 		const updatedContent = content
 			.replace(/from '\$lib\/autoformstate\.svelte\.js'/g, "from 'sveltekit-autoforms'")
-			.replace(/from '\$lib\/types\.d\.js'/g, "from 'sveltekit-autoforms'");
+			.replace(/from '\$lib\/types\.d\.js'/g, "from 'sveltekit-autoforms'")
+			// Handle relative imports
+			.replace(/from '\.\.\/autoformstate\.svelte\.js'/g, "from 'sveltekit-autoforms'")
+			.replace(/from '\.\.\/types\.d\.js'/g, "from 'sveltekit-autoforms'")
+			// Handle other possible relative paths
+			.replace(/from '\.\.?\/.*?autoformstate\.svelte\.js'/g, "from 'sveltekit-autoforms'")
+			.replace(/from '\.\.?\/.*?types\.d\.js'/g, "from 'sveltekit-autoforms'");
 
 		// Only write if content changed
 		if (content !== updatedContent) {
