@@ -50,7 +50,6 @@ export function getMeta<T extends ZodRawShape>(form_schema: ZodObject<T>) {
 			entries?: ZodEnum['def']['entries'];
 		});
 	}
-
 	return {
 		form: auto_form_meta,
 		fields: fields

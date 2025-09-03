@@ -4,7 +4,7 @@
 	import { type ZodRawShape, type ZodObject, type ZodError } from 'zod/v4';
 	import { type $ZodIssueBase } from 'zod/v4/core';
 	import { type Snippet } from 'svelte';
-
+	import { type AutoformsConfig } from './types.js';
 	// Utility
 	import { getMeta } from './zod_adapter.js';
 	type EnhanceCallback<Result> = Parameters<RemoteForm<Result>['enhance']>[0];
@@ -12,7 +12,7 @@
 		result: any
 	) => Promise<void | { issues: $ZodIssueBase[] }> | void | { issues: $ZodIssueBase[] };
 
-	type AutoFormProps<T extends ZodRawShape = ZodRawShape> = {
+	export type AutoFormProps<T extends ZodRawShape = ZodRawShape> = {
 		remoteFunction?: RemoteForm<any>;
 		form_schema: ZodObject<T>;
 		//form_meta?: FormMeta;
@@ -26,6 +26,7 @@
 		callback?: AutoFormCallback;
 		open?: boolean;
 		children?: Snippet;
+		config: AutoformsConfig;
 	};
 
 	let {
@@ -39,6 +40,7 @@
 		container_type = 'none',
 		callback,
 		open,
+		config,
 		children
 	}: AutoFormProps = $props();
 

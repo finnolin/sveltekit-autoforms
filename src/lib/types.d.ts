@@ -15,3 +15,10 @@ export interface FieldMeta {
 	autocomplete?: string;
 	component: Component<any>;
 }
+
+export type AutoformsConfig = {
+	zod_mappings?: {
+		string?: typeof Component;
+		number?: typeof Component;
+	};
+};

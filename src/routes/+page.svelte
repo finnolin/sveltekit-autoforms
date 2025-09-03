@@ -2,7 +2,7 @@
 	import { submitAutoForm } from './autoform.remote.js';
 	import { form_schema_register } from '$lib/schemas/form-schema-register.js';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import AutoForm from '$lib/autoform.svelte';
+	import AutoForm from '$lib/autoformconfig.svelte';
 	import { type $ZodIssueBase } from 'zod/v4/core';
 
 	function handleForm(form_result: any): { issues: $ZodIssueBase[] } | void {
