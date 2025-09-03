@@ -237,7 +237,7 @@ async function copyFieldComponents(target_dir: string, ui_dir: string, component
 
 		// This is the key step: rewrite the relative imports to use the user's alias
 		const import_regex = /from\s+['"](\.\.\/\.\.\/)(.+)['"]/g;
-		content = content.replace(import_regex, `from '@finnolin/sveltekit-autoforms`);
+		content = content.replace(import_regex, `from '@finnolin/sveltekit-autoforms'`);
 
 		// Write the modified content to the user's project
 		fs.writeFileSync(dest_path, content);
