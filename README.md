@@ -1,58 +1,50 @@
-# Svelte library
+# SvelteKit Autoforms
 
-Everything you need to build a Svelte library, powered by [`sv`](https://npmjs.com/package/sv).
+sveltekit-autoforms is a library for SvelteKit that automatically generates fully functional, progressively enhanced forms directly from your Zod schemas.
 
-Read more about creating a library [in the docs](https://svelte.dev/docs/kit/packaging).
+> **Note:** This project is in its very early stages. The API is subject to change, and there may be bugs. Please use with caution and feel free to contribute!
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **Zero-Effort Forms**: Create entire forms from a single Zod schema.
+- **Progressive Enhancement**: Built to work seamlessly with SvelteKit's remote functions.
+- **Bring Your Own Components**: A CLI is included to install pre-built shadcn-svelte compatible components directly into your project.
+- **Intelligent Setup**: The CLI automatically detects your project's path aliases (`$lib`, etc.) and component paths for you.
 
-```sh
-# create a new project in the current directory
-npx sv create
+## Installation
 
-# create a new project in my-app
-npx sv create my-app
+```bash
+npm install @finnolin/sveltekit-autoforms
 ```
 
-## Developing
+## Basic Usage
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+The core of the library is the `Form` component. Provide it with a Zod schema, and it will generate the corresponding form fields and a submit button.
 
-```sh
-npm run dev
+**src/routes/+page.svelte**
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+```svelte
+<script lang="ts">
+	import { Form } from '@finnolin/sveltekit-autoforms';
+	import { z } from 'zod';
+
+	const loginSchema = z.object({
+		email: z.string().email(),
+		password: z.string().min(8, 'Password must be at least 8 characters long.')
+	});
+</script>
+
+<Form form_schema={loginSchema} />
 ```
 
-Everything inside `src/lib` is part of your library, everything inside `src/routes` can be used as a showcase or preview app.
+This will render a form with an email input, a password input, and a submit button. Client-side validation is automatically handled based on your schema.
 
-## Building
+## Installing Components (CLI)
 
-To build your library:
+sveltekit-autoforms uses a bring-your-own-component model. A CLI is provided to install a set of pre-built components that are compatible with shadcn-svelte.
 
-```sh
-npm pack
-```
+To run the installer, use:
 
-To create a production version of your showcase app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
-
-## Publishing
-
-Go into the `package.json` and give your package the desired name through the `"name"` option. Also consider adding a `"license"` field and point it to a `LICENSE` file which you can create from a template (one popular option is the [MIT license](https://opensource.org/license/mit/)).
-
-To publish your library to [npm](https://www.npmjs.com):
-
-```sh
-npm publish
+```bash
+npx @finnolin/sveltekit-autoforms@latest install
 ```
