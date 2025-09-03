@@ -8,10 +8,18 @@ node_modules
 /.svelte-kit
 /build
 /dist
+/src/lib/components/ui
+/src/lib/components/autoforms
+/src/lib/utils.ts
+
+components.json
+/bin/index.js
 
 # OS
 .DS_Store
 Thumbs.db
+
+
 
 # Env
 .env

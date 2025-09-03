@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { submitAutoForm } from './autoform.remote.js';
 	import { form_schema_register } from '$lib/schemas/form-schema-register.js';
+	import Input from '$lib/components/ui/input/input.svelte';
 	import AutoForm from '$lib/autoform.svelte';
 	import { type $ZodIssueBase } from 'zod/v4/core';
 
@@ -34,3 +35,5 @@
 			>Submit</button>
 	{/snippet} i am a child</AutoForm>
 <AutoForm form_schema={form_schema_register} callback={handleForm} />
+
+<Input />

@@ -1,6 +1,6 @@
 import * as z from 'zod/v4';
 import { form_registry, field_registry } from '$lib/zod_adapter.js';
-import * as Fields from '../fields/index.js';
+import * as Fields from '$lib/components/shadcn/index.ts';
 
 export const form_schema_login = z
 	.object({
