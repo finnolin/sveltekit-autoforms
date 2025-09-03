@@ -28,6 +28,7 @@
 		"!dist/**/*.spec.*",
 		"!dist/schemas/**",
 		"!dist/components/ui/**",
+		"!dist/components/autoforms/**",
 		"!dist/hooks/**",
 		"!dist/utils.**"
 	],
@@ -100,7 +101,6 @@
 		]
 	},
 	"dependencies": {
-		"@clack/prompts": "^0.11.0",
-		"commander": "^14.0.0"
+		"@clack/prompts": "^0.11.0"
 	}
 }
