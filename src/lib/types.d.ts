@@ -23,6 +23,7 @@ export interface FieldMeta {
 export type AutoformsFieldMeta = FieldMeta & {
 	type: ZodKind;
 	entries?: $ZodEnum['def']['entries'];
+	def: $ZodTypeDef;
 };
 
 type EnhanceCallback<Result> = Parameters<RemoteForm<Result>['enhance']>[0];

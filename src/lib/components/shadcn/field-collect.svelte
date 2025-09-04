@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { type AutoFormState } from '@finnolin/sveltekit-autoforms';
+	import { type ZodEnum, type ZodArray, type ZodType } from 'zod/v4';
+	import { type $ZodAnyDef, type $ZodOptional, type $ZodNullableDef } from 'zod/v4/core';
 	import * as Select from '$lib/components/ui/select/index.ts';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import type { AutoformsFieldMeta } from '@finnolin/sveltekit-autoforms';
@@ -10,6 +12,7 @@
 		auto_form: AutoFormState<any>;
 	};
 	let { field, auto_form, ...props }: Props = $props();
+
 	function objectToArray(obj: any) {
 		const array = [];
 		for (const key in obj) {
@@ -19,15 +22,35 @@
 		}
 		return array;
 	}
-	const entries = objectToArray(field.entries);
+
+	// peel off one optional layer if present
+	const schema =
+		field.def.type === 'optional'
+			? (field.def as $ZodNullableDef).innerType
+			: (field.def as ZodType);
+
+	// now treat as array of enums
+	const arrDef = schema as ZodArray<ZodEnum>;
+	const entries = objectToArray(arrDef.element.def.entries);
+	//let entries = [];
+
+	//const entries = [{ value: 'a', label: 'A' }];
 	const trigger_text = $derived(
-		field.entries[auto_form.data[field.field_id]] ?? 'Select an option...'
+		arrDef.element.def.entries[auto_form.data[field.field_id]] ?? 'Select an option...'
 	);
+
+	let value: string | undefined = $state();
 </script>
 
 <Header title={field.label} />
 
-<Select.Root type="single" name={field.field_id} bind:value={auto_form.data[field.field_id]}>
+<Select.Root
+	type="single"
+	name={field.field_id}
+	bind:value
+	onValueChange={() => {
+		auto_form.data[field.field_id] = value;
+	}}>
 	<Select.Trigger class="w-[180px]">
 		{trigger_text}
 	</Select.Trigger>

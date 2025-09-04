@@ -67,7 +67,9 @@ export class AutoFormState<S extends ZodRawShape = ZodRawShape> {
 	}
 
 	async validateForm() {
+		//console.log(this.data);
 		const result = await this.schema.safeParseAsync(this.data);
+
 		if (result.success) {
 			this.success = true;
 			return true;

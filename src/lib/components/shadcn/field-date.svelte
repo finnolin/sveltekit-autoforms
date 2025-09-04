@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { type AutoFormState } from '$lib/autoformstate.svelte.js';
+	import { type AutoFormState } from '@finnolin/sveltekit-autoforms';
 	import { DateFormatter, type DateValue, getLocalTimeZone } from '@internationalized/date';
 	import { cn } from '$lib/utils.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import { Calendar } from '$lib/components/ui/calendar/index.js';
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import type { HTMLInputAttributes } from 'svelte/elements';
-	import type { AutoformsFieldMeta } from '$lib/types.d.js';
+	import type { AutoformsFieldMeta } from '@finnolin/sveltekit-autoforms';
 	import Header from './element-header.svelte';
 	import Footer from './element-footer.svelte';
 	type Props = HTMLInputAttributes & {

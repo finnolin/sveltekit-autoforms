@@ -1,5 +1,5 @@
 import { registry, ZodEnum } from 'zod/v4';
-import type { ZodRawShape, ZodObject, ZodSchema } from 'zod/v4';
+import type { ZodRawShape, ZodObject, ZodType } from 'zod/v4';
 import type { FormMeta, FieldMeta, AutoformsFieldMeta } from './types.d.js';
 
 export const form_registry = registry<FormMeta>();
@@ -38,12 +38,15 @@ export function getMeta<T extends ZodRawShape>(form_schema: ZodObject<T>) {
 	const fields: FieldMeta[] = [];
 
 	for (const [field_name, field_schema] of Object.entries(form_schema.shape)) {
-		const zod_schema = field_schema as ZodSchema;
+		const zod_schema = field_schema as ZodType;
 		const auto_field_meta = field_registry.get(zod_schema);
+
+		//console.log(zod_schema.def);
 
 		fields.push({
 			...auto_field_meta,
 			type: zod_schema.def.type,
+			def: zod_schema.def,
 			...(zod_schema instanceof ZodEnum && { entries: zod_schema.def.entries })
 		} as AutoformsFieldMeta);
 	}

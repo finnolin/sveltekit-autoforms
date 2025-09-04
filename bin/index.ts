@@ -137,7 +137,7 @@ async function installShadcnComponents() {
 		const resolved_lib_dir = resolveAliasedPath(lib_dir, project_root);
 		const target_dir = path.join(components_dir.replace(lib_dir, resolved_lib_dir), 'autoforms');
 
-		await copyFieldComponents(target_dir, shadcn_ui_dir, components_dir);
+		await copyFieldComponents(target_dir, shadcn_ui_dir, components_dir, lib_dir);
 
 		//copyAutoformsConfig(target_dir);
 		const alias_dir = path.join(components_dir, 'autoforms', 'fields');
@@ -182,7 +182,12 @@ async function createIndexFile(file_names: string[], target_dir: string) {
  * @param target_dir The destination directory (e.g., src/lib/components/autoform)
  * @param ui_dir The alias for shadcn/ui components (e.g., $lib/components/ui)
  */
-async function copyFieldComponents(target_dir: string, ui_dir: string, components_dir: string) {
+async function copyFieldComponents(
+	target_dir: string,
+	ui_dir: string,
+	components_dir: string,
+	lib_dir: string
+) {
 	// --- 1. Find the source component files ---
 	// This assumes your packaged files are in `dist` relative to this script.
 	// Adjust the relative path if your build output is different.
@@ -242,9 +247,10 @@ async function copyFieldComponents(target_dir: string, ui_dir: string, component
 		let content = fs.readFileSync(source_path, 'utf-8');
 
 		// This is the key step: rewrite the relative imports to use the user's alias
-		const import_regex = /from\s+['"](\.\.\/\.\.\/)(.+)['"]/g;
-		content = content.replace(import_regex, `from '@finnolin/sveltekit-autoforms'`);
-		content = content.replace('../ui/', ui_dir + '/');
+		//const import_regex = /from\s+['"](\.\.\/\.\.\/)(.+)['"]/g;
+		//content = content.replace(import_regex, `from '@finnolin/sveltekit-autoforms'`);
+		content = content.replaceAll('../ui/', ui_dir + '/');
+		content = content.replaceAll('../../utils', lib_dir + '/utils');
 		// Write the modified content to the user's project
 		fs.writeFileSync(dest_path, content);
 	}

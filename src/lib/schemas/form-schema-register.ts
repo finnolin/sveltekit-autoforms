@@ -52,7 +52,15 @@ export const form_schema_register = z
 			field_id: 'select',
 			label: 'Select',
 			component: Fields.Select
-		})
+		}),
+		array: z
+			.array(z.enum({ salmon: 'Salmon', tuna: 'Tuna', shrimp: 'Shrimp' }))
+			.optional()
+			.register(field_registry, {
+				field_id: 'array',
+				label: 'Array',
+				component: Fields.Collect
+			})
 	})
 	.register(form_registry, {
 		title: 'Login'
