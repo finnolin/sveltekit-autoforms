@@ -1,8 +1,8 @@
 <script lang="ts">
+	import Autoform from '$lib/autoform.svelte';
 	import { submitAutoForm } from './autoform.remote.js';
 	import { form_schema_register } from '$lib/schemas/form-schema-register.js';
-	import Input from '$lib/components/ui/input/input.svelte';
-	import AutoForm from '$lib/autoformconfig.svelte';
+	//import AutoForm from '$lib/autoform.svelte';
 	import { type $ZodIssueBase } from 'zod/v4/core';
 
 	function handleForm(form_result: any): { issues: $ZodIssueBase[] } | void {
@@ -23,7 +23,7 @@
 <p>Create your package using @sveltejs/package and preview/showcase your work with SvelteKit</p>
 <p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
 
-<AutoForm
+<Autoform
 	remoteFunction={submitAutoForm}
 	form_schema={form_schema_register}
 	callback={async (result) => {
@@ -33,7 +33,5 @@
 	{#snippet button_snippet()}
 		<button class="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
 			>Submit</button>
-	{/snippet} i am a child</AutoForm>
-<AutoForm form_schema={form_schema_register} callback={handleForm} />
-
-<Input />
+	{/snippet} i am a child</Autoform>
+<Autoform form_schema={form_schema_register} callback={handleForm} />

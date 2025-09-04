@@ -138,6 +138,10 @@ async function installShadcnComponents() {
 		const target_dir = path.join(components_dir.replace(lib_dir, resolved_lib_dir), 'autoforms');
 
 		await copyFieldComponents(target_dir, shadcn_ui_dir, components_dir);
+
+		//copyAutoformsConfig(target_dir);
+		const alias_dir = path.join(components_dir, 'autoforms', 'fields');
+		log.success(`You can now import them from '${alias_dir}'`);
 	} else {
 		log.error('Could not find components.json in project root.');
 		log.info('Please run `npx shadcn-svelte@latest init` to create one.');
@@ -178,7 +182,7 @@ async function createIndexFile(file_names: string[], target_dir: string) {
  * @param target_dir The destination directory (e.g., src/lib/components/autoform)
  * @param ui_dir The alias for shadcn/ui components (e.g., $lib/components/ui)
  */
-async function copyFieldComponents(target_dir: string, ui_dir: string, component_dir: string) {
+async function copyFieldComponents(target_dir: string, ui_dir: string, components_dir: string) {
 	// --- 1. Find the source component files ---
 	// This assumes your packaged files are in `dist` relative to this script.
 	// Adjust the relative path if your build output is different.
@@ -225,6 +229,8 @@ async function copyFieldComponents(target_dir: string, ui_dir: string, component
 	const s = spinner();
 	s.start(`Installing ${components_to_install.length} components...`);
 
+	target_dir = path.join(target_dir, 'fields');
+
 	// Ensure the target directory exists
 	fs.mkdirSync(target_dir, { recursive: true });
 
@@ -238,18 +244,43 @@ async function copyFieldComponents(target_dir: string, ui_dir: string, component
 		// This is the key step: rewrite the relative imports to use the user's alias
 		const import_regex = /from\s+['"](\.\.\/\.\.\/)(.+)['"]/g;
 		content = content.replace(import_regex, `from '@finnolin/sveltekit-autoforms'`);
-
+		content = content.replace('../ui/', ui_dir + '/');
 		// Write the modified content to the user's project
 		fs.writeFileSync(dest_path, content);
 	}
 	s.message('Creating index file...');
 	await createIndexFile(components_to_install, target_dir);
 	s.stop('Components installed successfully!');
-	const alias_dir = path.join(component_dir, 'autoforms');
-	log.success(`You can now import them from '${alias_dir}'`);
 }
 
-// At the end of your install.ts file
+async function copyAutoformsConfig(target_dir: string) {
+	const source_dir = path.resolve(__dirname, '../dist');
+	const config_source = path.join(source_dir, 'autoforms.config.js');
+
+	// Read config file content
+	const config_content = fs.readFileSync(config_source, 'utf-8');
+
+	// Destination paths
+	const form_dest = path.join(target_dir, 'autoform.svelte');
+	const config_dest = path.join(target_dir, 'autoforms.config.ts');
+
+	// Inline content for the svelte file
+	const form_content = `<script lang="ts">
+	import { AutoformBase } from '@finnolin/sveltekit-autoforms';
+	import { type AutoFormProps } from '@finnolin/sveltekit-autoforms';
+	import default_config from './autoforms.config.ts';
+	let { ...autoFormProps }: Omit<AutoFormProps, 'config'> = $props();
+	const config = default_config;
+</script>
+
+<AutoformBase {config} {...autoFormProps} />
+`;
+
+	// Write files
+	fs.writeFileSync(form_dest, form_content);
+	fs.writeFileSync(config_dest, config_content);
+}
+
 main().catch((e) => {
 	log.error('An unexpected error occurred:');
 	console.error(e);

@@ -37,6 +37,21 @@ export const form_schema_register = z
 			label: 'Confirm Password',
 			hidden: true,
 			component: Fields.Text
+		}),
+		amount: z.number().register(field_registry, {
+			field_id: 'amount',
+			label: 'Amount',
+			component: Fields.Text
+		}),
+		date: z.date().register(field_registry, {
+			field_id: 'date',
+			label: 'Date',
+			component: Fields.Date
+		}),
+		select: z.enum({ salmon: 'Salmon', tuna: 'Tuna', shrimp: 'Shrimp' }).register(field_registry, {
+			field_id: 'select',
+			label: 'Select',
+			component: Fields.Select
 		})
 	})
 	.register(form_registry, {

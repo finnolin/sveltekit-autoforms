@@ -1,33 +1,9 @@
 <script lang="ts">
-	import { type RemoteForm, type SubmitFunction } from '@sveltejs/kit';
+	import { type RemoteForm } from '@sveltejs/kit';
 	import { AutoFormState } from './autoformstate.svelte.js';
-	import { type ZodRawShape, type ZodObject, type ZodError } from 'zod/v4';
-	import { type $ZodIssueBase } from 'zod/v4/core';
-	import { type Snippet } from 'svelte';
-	import { type AutoformsConfig } from './types.js';
+	import { type AutoformProps, type AutoFormCallback } from './types.js';
 	// Utility
 	import { getMeta } from './zod_adapter.js';
-	type EnhanceCallback<Result> = Parameters<RemoteForm<Result>['enhance']>[0];
-	type AutoFormCallback = (
-		result: any
-	) => Promise<void | { issues: $ZodIssueBase[] }> | void | { issues: $ZodIssueBase[] };
-
-	export type AutoFormProps<T extends ZodRawShape = ZodRawShape> = {
-		remoteFunction?: RemoteForm<any>;
-		form_schema: ZodObject<T>;
-		//form_meta?: FormMeta;
-		//form_id?: string;
-		title?: string;
-		description?: string;
-		button_text?: string;
-		button_snippet?: Snippet;
-		button_class?: string;
-		container_type?: 'dialog' | 'modal' | 'none';
-		callback?: AutoFormCallback;
-		open?: boolean;
-		children?: Snippet;
-		config: AutoformsConfig;
-	};
 
 	let {
 		remoteFunction,
@@ -40,29 +16,8 @@
 		container_type = 'none',
 		callback,
 		open,
-		config,
 		children
-	}: AutoFormProps = $props();
-
-	function createEnhanceFunction<Result>(
-		autoform: AutoFormState,
-		callback: AutoFormCallback | undefined
-	): EnhanceCallback<Result> {
-		return async ({ form, data, submit }) => {
-			autoform.validateForm(); // Validate the form on the client
-			await submit(); // Run the remote function on the server
-			if (!callback) return; // run the callback function passed to the component
-			const callback_response = await callback({
-				data: autoform.data,
-				success: autoform.success,
-				validation: autoform.validation
-			});
-			if (!callback_response) {
-				return;
-			}
-			autoform.processIssues(callback_response.issues); // Process the issues from the callback and pass them to the autoform
-		};
-	}
+	}: AutoformProps = $props();
 
 	function createFormHandler<Result>(
 		autoform: AutoFormState,
