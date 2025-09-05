@@ -17,6 +17,7 @@
 	bind:value={auto_form.data[field.field_id]}
 	name={field.field_id}
 	type={field.hidden ? 'password' : 'text'}
+	autocomplete={field.autocomplete}
 	onchange={(e) => {
 		auto_form.onBlur(field.field_id);
 	}}

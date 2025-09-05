@@ -16,7 +16,8 @@
 		container_type = 'none',
 		callback,
 		open,
-		children
+		children,
+		debug = false
 	}: AutoformProps = $props();
 
 	function createFormHandler<Result>(
@@ -27,6 +28,9 @@
 		if (remoteFunction) {
 			return {
 				...remoteFunction.enhance(async ({ form, data, submit }) => {
+					if (debug) {
+						console.log('on remote submit');
+					}
 					autoform.validateForm();
 					await submit();
 					if (!callback) return;
@@ -45,6 +49,9 @@
 			return {
 				onsubmit: async (event: SubmitEvent) => {
 					event.preventDefault();
+					if (debug) {
+						console.log('onsumbit');
+					}
 					autoform.validateForm();
 					if (!callback) return;
 					const callback_response = await callback({

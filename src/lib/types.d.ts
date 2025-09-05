@@ -1,5 +1,6 @@
 import type { Component } from 'svelte';
 import type { $ZodTypeDef, $ZodEnum } from 'zod/v4/core';
+import type { FullAutoFill } from 'svelte/elements';
 
 export interface FormMeta {
 	form_id?: string;
@@ -16,7 +17,7 @@ export interface FieldMeta {
 	description?: string;
 	readonly?: boolean;
 	hidden?: boolean;
-	autocomplete?: string;
+	autocomplete?: FullAutoFill;
 	component: Component<any>;
 }
 
@@ -45,4 +46,5 @@ export type AutoformProps<T extends ZodRawShape = ZodRawShape> = {
 	callback?: AutoFormCallback;
 	open?: boolean;
 	children?: Snippet;
+	debug?: boolean;
 };
