@@ -69,7 +69,7 @@
 	}
 
 	const form_meta = getMeta(form_schema);
-	const autoform = new AutoFormState(form_schema);
+	const autoform = new AutoFormState(form_schema, debug);
 </script>
 
 {#snippet container_none()}
@@ -78,9 +78,9 @@
 			<field.component {field} auto_form={autoform} />
 		{/each}
 		{#if button_snippet}
-			{@render button_snippet()}
+			{@render button_snippet(!autoform.success)}
 		{:else}
-			<button class={button_class}>
+			<button class={button_class} type="submit" disabled={!autoform.success}>
 				{button_text || 'Submit'}
 			</button>
 		{/if}

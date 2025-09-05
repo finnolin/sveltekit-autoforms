@@ -41,7 +41,7 @@
 			bind:value={date_value}
 			onValueChange={(v) => {
 				auto_form.data[field.field_id] = v?.toDate(getLocalTimeZone());
-				auto_form.validateField(field.field_id);
+				auto_form.onBlur(field.field_id);
 			}} />
 	</Popover.Content>
 </Popover.Root>

@@ -11,6 +11,8 @@ import type { $ZodTypeDef } from 'zod/v4/core';
 
 type ZodKind = $ZodTypeDef['type'];
 
+type OptionsMap<V extends object = Record<string, unknown>> = Record<string, V>;
+
 export interface FieldMeta {
 	field_id: string;
 	label?: string;
@@ -18,6 +20,7 @@ export interface FieldMeta {
 	readonly?: boolean;
 	hidden?: boolean;
 	autocomplete?: FullAutoFill;
+	options?: OptionsMap;
 	component: Component<any>;
 }
 

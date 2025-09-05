@@ -22,8 +22,9 @@ export class AutoFormState<S extends ZodRawShape = ZodRawShape> {
 	data = $state<FormValuesFromShape<S>>({} as FormValuesFromShape<S>);
 	validation = $state<FormValidationFromShape<S>>({} as FormValidationFromShape<S>);
 	success: boolean = $state(false);
+	debug: boolean = false;
 
-	constructor(schema: ZodObject<S>) {
+	constructor(schema: ZodObject<S>, debug: boolean = false) {
 		this.schema = schema;
 		const keys = Object.keys(schema.shape) as Array<keyof S>;
 		for (const key of keys) {
@@ -36,6 +37,8 @@ export class AutoFormState<S extends ZodRawShape = ZodRawShape> {
 				errors: []
 			};
 		}
+		console.log(this.validation);
+		this.debug = debug;
 	}
 
 	async validateField<K extends keyof S>(key: K) {
@@ -44,6 +47,10 @@ export class AutoFormState<S extends ZodRawShape = ZodRawShape> {
 		 * if the current value is invalid the field should be validated on input
 		 * if the current value is valid the field should be validated on blur
 		 */
+
+		if (this.debug) {
+			console.log('validateField', key, this.data[key]);
+		}
 		const field_schema = this.schema.shape[key] as unknown as ZodObject;
 
 		// Validate with Zod
@@ -66,23 +73,40 @@ export class AutoFormState<S extends ZodRawShape = ZodRawShape> {
 		}
 	}
 
-	async validateForm() {
+	async preValidateForm() {
 		//console.log(this.data);
 		const result = await this.schema.safeParseAsync(this.data);
 
 		if (result.success) {
+			if (this.debug) {
+				console.log('preValidateForm success');
+			}
 			this.success = true;
 			return true;
 		} else {
+			if (this.debug) {
+				console.log('preValidateForm error');
+			}
 			this.success = false;
 			result.error.issues.forEach((issue) => {
-				this.validation[issue.path[0] as keyof S].errors = [];
-				this.validation[issue.path[0] as keyof S].errors.push(issue.message);
-				this.validation[issue.path[0] as keyof S].valid = false;
-				this.validation[issue.path[0] as keyof S].dirty = true;
+				if (
+					this.validation[issue.path[0] as keyof S].dirty &&
+					!this.validation[issue.path[0] as keyof S].valid
+				) {
+					this.validation[issue.path[0] as keyof S].errors = [];
+					this.validation[issue.path[0] as keyof S].errors.push(issue.message);
+					this.validation[issue.path[0] as keyof S].valid = false;
+				}
 			});
 			return false;
 		}
+	}
+
+	async validateForm() {
+		for (const key of Object.keys(this.validation)) {
+			this.validation[key].dirty = true;
+		}
+		return await this.preValidateForm();
 	}
 
 	processIssues(issues: $ZodIssueBase[]) {
@@ -102,13 +126,20 @@ export class AutoFormState<S extends ZodRawShape = ZodRawShape> {
 	}
 
 	onInput(key: keyof S) {
+		if (this.debug) {
+			console.log('onInput', key);
+		}
 		if (this.validation[key].dirty && !this.validation[key].valid) {
 			this.validateField(key);
 		}
 	}
 
 	onBlur(key: keyof S) {
+		if (this.debug) {
+			console.log('onBlur', key);
+		}
 		this.validation[key].dirty = true;
 		this.validateField(key);
+		this.preValidateForm();
 	}
 }

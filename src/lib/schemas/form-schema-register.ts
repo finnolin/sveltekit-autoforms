@@ -1,6 +1,13 @@
 import * as z from 'zod/v4';
 import { form_registry, field_registry } from '$lib/zod_adapter.js';
 import * as Fields from '$lib/components/shadcn/index.ts';
+
+const options = {
+	salmon: { label: 'Cool Salmon' },
+	tuna: { label: 'Tuna' },
+	jellyfish: { label: 'Jellyfish' }
+};
+
 export const form_schema_register = z
 	.object({
 		username: z
@@ -29,18 +36,15 @@ export const form_schema_register = z
 		password: z.string().min(8).register(field_registry, {
 			field_id: 'password',
 			label: 'Password',
+			autocomplete: 'new-password',
 			hidden: true,
 			component: Fields.Text
 		}),
 		confirm_password: z.string().min(8).register(field_registry, {
 			field_id: 'confirm_password',
 			label: 'Confirm Password',
+			autocomplete: 'off',
 			hidden: true,
-			component: Fields.Text
-		}),
-		amount: z.number().register(field_registry, {
-			field_id: 'amount',
-			label: 'Amount',
 			component: Fields.Text
 		}),
 		date: z.date().register(field_registry, {
@@ -48,11 +52,14 @@ export const form_schema_register = z
 			label: 'Date',
 			component: Fields.Date
 		}),
-		select: z.enum({ salmon: 'Salmon', tuna: 'Tuna', shrimp: 'Shrimp' }).register(field_registry, {
-			field_id: 'select',
-			label: 'Select',
-			component: Fields.Select
-		}),
+		select: z
+			.enum(Object.keys(options) as [keyof typeof options, ...(keyof typeof options)[]])
+			.register(field_registry, {
+				field_id: 'select',
+				label: 'Select',
+				component: Fields.Select,
+				options: options
+			}),
 		array: z
 			.array(z.enum({ salmon: 'Salmon', tuna: 'Tuna', shrimp: 'Shrimp' }))
 			.optional()
