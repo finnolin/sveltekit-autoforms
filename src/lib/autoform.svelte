@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type RemoteForm } from '@sveltejs/kit';
+	import { type RemoteForm, type RemoteFormInput } from '@sveltejs/kit';
 	import { AutoFormState } from './autoformstate.svelte.js';
 	import { type AutoformProps, type AutoFormCallback } from './types.js';
 	// Utility
@@ -20,10 +20,10 @@
 		debug = false
 	}: AutoformProps = $props();
 
-	function createFormHandler<Result>(
+	function createFormHandler<Data extends void | RemoteFormInput, Result>(
 		autoform: AutoFormState,
 		callback: AutoFormCallback | undefined,
-		remoteFunction?: RemoteForm<Result>
+		remoteFunction?: RemoteForm<Data, Result>
 	) {
 		if (remoteFunction) {
 			return {

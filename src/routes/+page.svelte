@@ -33,7 +33,7 @@
 		return response;
 	}}>
 	{#snippet button_snippet(disabled: boolean)}
-		<Button {disabled} class="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-			>Submit</Button>
-	{/snippet} i am a child</Autoform>
-<Autoform form_schema={form_schema_register} callback={handleForm} />
+		<Button {disabled} type="submit">Submit</Button>
+	{/snippet}
+</Autoform>
+<!-- <Autoform form_schema={form_schema_register} callback={handleForm} /> -->
